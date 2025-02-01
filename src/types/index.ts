@@ -3,16 +3,16 @@ export interface User {
   username: string;
   accountNumber: string;
   balance: number;
+  password:string;
 }
 
 export interface Transaction {
   id: string;
   userId: string;
-  type: 'deposit' | 'withdrawal' | 'transfer';
+  methodName: 'deposit' | 'withdrawal' | 'transfer' | 'viewBalance';
   amount: number;
   recipientId?: string;
-  description: string;
-  date: string;
+  createdDate: string;
 }
 
 export interface AuthState {

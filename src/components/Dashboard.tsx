@@ -1,31 +1,45 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Transaction } from '../types';
 import { CreditCard, ArrowUpRight, ArrowDownRight, History } from 'lucide-react';
 import './account.css'
+import axios from 'axios';
 
 export const Dashboard = () => {
   const { user } = useAuth();
   const [amount, setAmount] = useState('');
   const [recipientEmail, setRecipientEmail] = useState('');
-  const [transactions] = useState<Transaction[]>([
+  const [transactions,seTransactions] = useState<Transaction[]>([
     {
       id: '1',
       userId: '1',
-      type: 'deposit',
+      methodName: 'deposit',
       amount: 500,
-      description: 'Salary deposit',
-      date: '2024-03-10',
+      createdDate: '2024-03-10',
     },
     {
       id: '2',
       userId: '1',
-      type: 'withdrawal',
+      methodName: 'withdrawal',
       amount: 100,
-      description: 'ATM withdrawal',
-      date: '2024-03-09',
+      createdDate: '2024-03-09',
     },
   ]);
+
+  useEffect(() =>{
+    fetchTransactions();
+  });
+
+  const fetchTransactions = async() => {
+    const authHeader = `Basic ${btoa(`${user?.username}:Java`)}`;
+    const response = await axios.get(`http://localhost:8080/bank/transactions/${user?.id}`,{
+        headers: {
+          'Authorization': authHeader
+        },
+      }
+    );
+    seTransactions(response.data);
+  }
 
   const handleDeposit = () => {
     // Implement deposit logic
@@ -154,18 +168,18 @@ export const Dashboard = () => {
                 {transactions.map((transaction) => (
                   <tr key={transaction.id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(transaction.date).toLocaleDateString()}
+                      {new Date(transaction.createdDate).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {transaction.type}
+                      {transaction.methodName}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {transaction.description}
+                      {transaction.methodName}
                     </td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm ${
-                      transaction.type === 'deposit' ? 'text-green-600' : 'text-red-600'
+                      transaction.methodName === 'deposit' || 'viewBalance' ? 'text-green-600' : 'text-red-600'
                     }`}>
-                      {transaction.type === 'deposit' ? '+' : '-'}${transaction.amount}
+                      {transaction.methodName === 'deposit' || 'viewBalance' ? '+' : '-'}${transaction.amount}
                     </td>
                   </tr>
                 ))}

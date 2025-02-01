@@ -49,6 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         username: getUser.data.username,
         accountNumber:getUser.data.accountNumber,
         balance: getUser.data.amount,
+        password:getUser.data.password
       };
       localStorage.setItem('user', JSON.stringify(mockUser));
       setAuthState({
@@ -69,6 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       username:"",
       accountNumber:"",
       balance: 0,
+      password:""
     };
     
     localStorage.setItem('user', JSON.stringify(mockUser));
