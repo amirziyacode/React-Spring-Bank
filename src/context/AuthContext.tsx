@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         username: getUser.data.username,
         accountNumber:getUser.data.accountNumber,
         balance: getUser.data.amount,
-        password:getUser.data.password
+        password:password
       };
       localStorage.setItem('user', JSON.stringify(mockUser));
       setAuthState({

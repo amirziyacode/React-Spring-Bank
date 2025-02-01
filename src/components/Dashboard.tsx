@@ -1,4 +1,4 @@
-import { useState,useEffect } from 'react';
+import { useState} from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Transaction } from '../types';
 import { CreditCard, ArrowUpRight, ArrowDownRight, History } from 'lucide-react';
@@ -25,13 +25,8 @@ export const Dashboard = () => {
       createdDate: '2024-03-09',
     },
   ]);
-
-  useEffect(() =>{
-    fetchTransactions();
-  });
-
   const fetchTransactions = async() => {
-    const authHeader = `Basic ${btoa(`${user?.username}:Java`)}`;
+    const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`;
     const response = await axios.get(`http://localhost:8080/bank/transactions/${user?.id}`,{
         headers: {
           'Authorization': authHeader
@@ -41,10 +36,21 @@ export const Dashboard = () => {
     seTransactions(response.data);
   }
 
-  const handleDeposit = () => {
-    // Implement deposit logic
+  const handleDeposit = async() => {
+    fetchDeposit();
     console.log('Deposit:', amount);
   };
+
+  const fetchDeposit = async() => {
+    const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
+      await axios.post(`http://localhost:8080/bank/deposit/${user?.accountNumber}`,{
+          headers: {
+            'Authorization': authHeader
+          },
+          amount,
+        }
+      );
+   }
 
   const handleWithdraw = () => {
     // Implement withdrawal logic
