@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, AuthState } from '../types';
+import axios from 'axios';
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
@@ -26,30 +27,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (username: string, password: string) => {
     // This is a mock implementation. In a real app, you would call your API
-    const mockUser: User = {
-      id: '1',
-      email,
-      firstName: 'John',
-      lastName: 'Doe',
-      balance: 1000,
-    };
-    
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    setAuthState({
-      user: mockUser,
-      isAuthenticated: true,
+    const respone =  await axios.post("http://localhost:8080/auth/login",{
+      username,
+      password
     });
+    //Encode The Data !!!
+    const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
+    if(respone.status === 200){
+      const getUser =  await axios.get("http://localhost:8080/auth/user",{
+        headers: {
+          'Authorization': authHeader
+        },
+          params:{
+            userName:username
+          }
+        });
+      const mockUser: User = {
+        id: getUser.data.id,
+        username: getUser.data.username,
+        accountNumber:getUser.data.accountNumber,
+        balance: getUser.data.amount,
+      };
+      localStorage.setItem('user', JSON.stringify(mockUser));
+      setAuthState({
+        user: mockUser,
+        isAuthenticated: true,
+      });
+    }else{
+      alert("username or paawrod invalid !!!")
+    }
+    
+
   };
 
-  const register = async (email: string, password: string, firstName: string, lastName: string) => {
+  const register = async (username: string, password: string, firstName: string, lastName: string) => {
     // This is a mock implementation. In a real app, you would call your API
     const mockUser: User = {
       id: '1',
-      email,
-      firstName,
-      lastName,
+      username:"",
+      accountNumber:"",
       balance: 0,
     };
     

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Transaction } from '../types';
 import { CreditCard, ArrowUpRight, ArrowDownRight, History } from 'lucide-react';
+import './account.css'
 
 export const Dashboard = () => {
   const { user } = useAuth();
@@ -47,10 +48,11 @@ export const Dashboard = () => {
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Welcome, {user?.firstName}!</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Welcome, {user?.username}!</h2>
               <p className="text-gray-600">Current Balance</p>
               <p className="text-3xl font-bold text-indigo-600">${user?.balance.toFixed(2)}</p>
             </div>
+            <p className='accountNumber' >{user?.accountNumber}</p>
             <CreditCard className="h-12 w-12 text-indigo-600" />
           </div>
         </div>
