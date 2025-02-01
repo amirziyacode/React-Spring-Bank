@@ -9,7 +9,7 @@ export interface User {
 export interface Transaction {
   id: string;
   userId: string;
-  methodName: 'deposit' | 'withdrawal' | 'transfer' | 'viewBalance';
+  methodName: 'Deposit' | 'withdrawal' | 'transfer' | 'viewBalance';
   amount: number;
   recipientId?: string;
   createdDate: string;

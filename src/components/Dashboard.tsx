@@ -8,23 +8,21 @@ import axios from 'axios';
 export const Dashboard = () => {
   const { user } = useAuth();
   const [amount, setAmount] = useState('');
+  const [blanace,setBalance] = useState(user?.balance);
   const [recipientEmail, setRecipientEmail] = useState('');
-  const [transactions,seTransactions] = useState<Transaction[]>([
-    {
-      id: '1',
-      userId: '1',
-      methodName: 'deposit',
-      amount: 500,
-      createdDate: '2024-03-10',
-    },
-    {
-      id: '2',
-      userId: '1',
-      methodName: 'withdrawal',
-      amount: 100,
-      createdDate: '2024-03-09',
-    },
-  ]);
+  const [transactions,seTransactions] = useState<Transaction[]>([]);
+  const getUser = async() => { 
+    const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
+    const getUser = await axios.get("http://localhost:8080/auth/user",{
+      headers: {
+        'Authorization': authHeader
+      },
+        params:{
+          userName:user?.username
+        }
+      });
+      setBalance(getUser.data.amount)
+   }
   const fetchTransactions = async() => {
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`;
     const response = await axios.get(`http://localhost:8080/bank/transactions/${user?.id}`,{
@@ -37,24 +35,35 @@ export const Dashboard = () => {
   }
 
   const handleDeposit = async() => {
-    fetchDeposit();
-    console.log('Deposit:', amount);
+    const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
+   const respone = fetch(`http://localhost:8080/bank/deposit/${user?.accountNumber}`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Authorization": authHeader
+      },
+      body: JSON.stringify({ amount:amount })
+    });
+
+    if((await respone).status === 200){
+      fetchTransactions();
+      getUser();
+    }
   };
 
-  const fetchDeposit = async() => {
-    const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
-      await axios.post(`http://localhost:8080/bank/deposit/${user?.accountNumber}`,{
-          headers: {
-            'Authorization': authHeader
-          },
-          amount,
-        }
-      );
-   }
 
-  const handleWithdraw = () => {
-    // Implement withdrawal logic
-    console.log('Withdraw:', amount);
+  const handleWithdraw = async() => {
+    const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
+    fetch(`http://localhost:8080/bank/withdrawal/${user?.accountNumber}`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Authorization": authHeader
+      },
+      body: JSON.stringify({ amount:amount })
+  });
+      fetchTransactions();
+      getUser();
   };
 
   const handleTransfer = () => {
@@ -70,7 +79,7 @@ export const Dashboard = () => {
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Welcome, {user?.username}!</h2>
               <p className="text-gray-600">Current Balance</p>
-              <p className="text-3xl font-bold text-indigo-600">${user?.balance.toFixed(2)}</p>
+              <p className="text-3xl font-bold text-indigo-600">${blanace?.toFixed(2)}</p>
             </div>
             <p className='accountNumber' >{user?.accountNumber}</p>
             <CreditCard className="h-12 w-12 text-indigo-600" />
@@ -183,9 +192,9 @@ export const Dashboard = () => {
                       {transaction.methodName}
                     </td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm ${
-                      transaction.methodName === 'deposit' || 'viewBalance' ? 'text-green-600' : 'text-red-600'
+                      transaction.methodName === 'Deposit'? 'text-green-600' : 'text-red-600'
                     }`}>
-                      {transaction.methodName === 'deposit' || 'viewBalance' ? '+' : '-'}${transaction.amount}
+                      {transaction.methodName === 'Deposit'? '+' : '-'}${transaction.amount}
                     </td>
                   </tr>
                 ))}
