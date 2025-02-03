@@ -38,15 +38,14 @@ export const Dashboard = () => {
 
   const handleDeposit = async() => {
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
-   const respone = fetch(`http://localhost:8080/bank/deposit/${user?.accountNumber}`, {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-          "Authorization": authHeader
-      },
-      body: JSON.stringify({ amount:amount })
-    });
-
+      const respone = fetch(`http://localhost:8080/bank/deposit/${user?.accountNumber}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": authHeader
+        },
+        body: JSON.stringify({ amount:amount })
+      });
     if((await respone).status === 200){
       fetchTransactions();
       getUser();

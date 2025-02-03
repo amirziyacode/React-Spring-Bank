@@ -16,7 +16,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isAuthenticated: false,
   });
 
-  // In a real app, you would verify the token with your backend
+
   useEffect(() => {
     const user = localStorage.getItem('user');
     if (user) {
@@ -28,36 +28,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (username: string, password: string) => {
-    const respone =  await axios.post("http://localhost:8080/auth/login",{
-      username,
-      password
-    });
     //Encode The Data !!!
     const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
-    if(respone.status === 200){
-      const getUser =  await axios.get("http://localhost:8080/auth/user",{
-        headers: {
-          'Authorization': authHeader
-        },
-          params:{
-            userName:username
-          }
-        });
-      const mockUser: User = {
-        id: getUser.data.id,
-        username: getUser.data.username,
-        accountNumber:getUser.data.accountNumber,
-        balance: getUser.data.amount,
-        password:password
-      };
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      setAuthState({
-        user: mockUser,
-        isAuthenticated: true,
+    try{
+      const respone =  await axios.post("http://localhost:8080/auth/login",{
+        username,
+        password
       });
-    }else{
-      alert("username or paawrod invalid !!!")
+      if(respone.status === 200){
+        const getUser =  await axios.get("http://localhost:8080/auth/user",{
+          headers: {
+            'Authorization': authHeader
+          },
+            params:{
+              userName:username
+            }
+          });
+        const mockUser: User = {
+          id: getUser.data.id,
+          username: getUser.data.username,
+          accountNumber:getUser.data.accountNumber,
+          balance: getUser.data.amount,
+          password:password
+        };
+        localStorage.setItem('user', JSON.stringify(mockUser));
+        setAuthState({
+          user: mockUser,
+          isAuthenticated: true,
+        });
+      }
+    }catch(error){
+      alert(error);
     }
+
     
 
   };

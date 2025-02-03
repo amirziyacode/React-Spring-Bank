@@ -9,15 +9,20 @@ export const RegisterForm = () => {
   const navigate = useNavigate();
 
   const registerApi = async() => {
-    if(password === confirmPassword){
-      await axios.post("http://localhost:8080/auth/register",{
-        username,
-        password
-      });
-      navigate('/login')
-    }else{
-      alert('Password not equal !!')
+    try{
+      if(password === confirmPassword){
+        await axios.post("http://localhost:8080/auth/register",{
+          username,
+          password
+        });
+        navigate('/login')
+      }else{
+        alert('Password not equal !!')
+      }
+    }catch(error){
+      console.log(error);
     }
+
   }
 
   return (
