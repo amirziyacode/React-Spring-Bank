@@ -9,8 +9,10 @@ export const Dashboard = () => {
   const { user } = useAuth();
   const [amount, setAmount] = useState('');
   const [blanace,setBalance] = useState(user?.balance);
-  const [recipientEmail, setRecipientEmail] = useState('');
+  const [accountNumberTransfer, setRecipientEmail] = useState('');
   const [transactions,seTransactions] = useState<Transaction[]>([]);
+
+
   const getUser = async() => { 
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
     const getUser = await axios.get("http://localhost:8080/auth/user",{
@@ -54,21 +56,38 @@ export const Dashboard = () => {
 
   const handleWithdraw = async() => {
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
-    fetch(`http://localhost:8080/bank/withdrawal/${user?.accountNumber}`, {
+    const respone =  fetch(`http://localhost:8080/bank/withdrawal/${user?.accountNumber}`, {
       method: "POST",
       headers: {
           "Content-Type": "application/json",
           "Authorization": authHeader
       },
-      body: JSON.stringify({ amount:amount })
-  });
+      body: JSON.stringify({ amount:amount})
+      });
+    if((await respone).status === 200){
       fetchTransactions();
       getUser();
+    }
   };
 
-  const handleTransfer = () => {
-    // Implement transfer logic
-    console.log('Transfer:', amount, 'to', recipientEmail);
+  const handleTransfer = async() => {
+    const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
+    const respone =  fetch(`http://localhost:8080/bank/transfer/${user?.accountNumber}`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Authorization": authHeader
+      },
+      body: JSON.stringify({ 
+        accountNumber:accountNumberTransfer,
+        amount:amount 
+      })
+    });
+    if((await respone).status === 200){
+      fetchTransactions();
+      getUser();
+    }
+    console.log('Transfer:', amount, 'to', accountNumberTransfer);
   };
 
   return (
@@ -138,8 +157,8 @@ export const Dashboard = () => {
             <input
               type="email"
               className="w-full p-2 border rounded mb-4"
-              placeholder="Recipient Email"
-              value={recipientEmail}
+              placeholder="Account Number"
+              value={accountNumberTransfer}
               onChange={(e) => setRecipientEmail(e.target.value)}
             />
             <input
@@ -159,7 +178,7 @@ export const Dashboard = () => {
         </div>
 
         {/* Transactions Table */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
+        <div className="bg-white rounded-lg shadow-lg p-6" onClick={fetchTransactions}>
           <h3 className="text-xl font-semibold mb-4">Recent Transactions</h3>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -172,7 +191,10 @@ export const Dashboard = () => {
                     Type
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Description
+                    From
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    To
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Amount
@@ -189,7 +211,10 @@ export const Dashboard = () => {
                       {transaction.methodName}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {transaction.methodName}
+                      {transaction.accountNumberFrom}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {transaction.accountNumberTo}
                     </td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm ${
                       transaction.methodName === 'Deposit'? 'text-green-600' : 'text-red-600'

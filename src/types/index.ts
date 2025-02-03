@@ -12,6 +12,8 @@ export interface Transaction {
   methodName: 'Deposit' | 'withdrawal' | 'transfer' | 'viewBalance';
   amount: number;
   recipientId?: string;
+  accountNumberTo:string;
+  accountNumberFrom:string;
   createdDate: string;
 }
 
