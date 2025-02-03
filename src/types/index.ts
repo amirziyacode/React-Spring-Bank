@@ -1,3 +1,5 @@
+// all data sink wihe model form backend
+
 export interface User {
   id: string;
   username: string;
@@ -5,7 +7,6 @@ export interface User {
   balance: number;
   password:string;
 }
-
 export interface Transaction {
   id: string;
   userId: string;

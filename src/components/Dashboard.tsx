@@ -12,9 +12,13 @@ export const Dashboard = () => {
   const [accountNumberTransfer, setRecipientEmail] = useState('');
   const [transactions,seTransactions] = useState<Transaction[]>([]);
 
-
+  // @** // 
+  //TODO:get User from import axios from 'axios';
+  // find user by username in {SpringBoot}
   const getUser = async() => { 
+    // Endcode Your Data {username,password}
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
+    // get user from url in Api
     const getUser = await axios.get("http://localhost:8080/auth/user",{
       headers: {
         'Authorization': authHeader
@@ -25,6 +29,9 @@ export const Dashboard = () => {
       });
       setBalance(getUser.data.amount)
    }
+  // @**
+  
+  
   const fetchTransactions = async() => {
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`;
     const response = await axios.get(`http://localhost:8080/bank/transactions/${user?.id}`,{
