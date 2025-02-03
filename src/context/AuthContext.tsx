@@ -28,7 +28,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (username: string, password: string) => {
-    // This is a mock implementation. In a real app, you would call your API
     const respone =  await axios.post("http://localhost:8080/auth/login",{
       username,
       password
@@ -64,7 +63,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const register = async (username: string, password: string, firstName: string, lastName: string) => {
-    // This is a mock implementation. In a real app, you would call your API
     const mockUser: User = {
       id: '1',
       username:"",

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import "./css/logni.css";
 
 export const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -17,6 +18,14 @@ export const LoginForm = () => {
       console.error('Login failed:', error);
     }
   };
+
+  const singup = () => {
+    try {
+      navigate('/register');
+    }catch(error){
+      console.error("Regesiter Failed");
+    }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -57,6 +66,7 @@ export const LoginForm = () => {
             >
               Sign in
             </button>
+            <p className="signup" onClick={singup}>if you want to make a new account click here</p>
           </div>
         </form>
       </div>

@@ -2,7 +2,7 @@ import { useState} from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Transaction } from '../types';
 import { CreditCard, ArrowUpRight, ArrowDownRight, History } from 'lucide-react';
-import './account.css'
+import './css/account.css'
 import axios from 'axios';
 
 export const Dashboard = () => {
