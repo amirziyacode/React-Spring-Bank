@@ -13,7 +13,7 @@ export const Dashboard = () => {
   const [transactions,seTransactions] = useState<Transaction[]>([]);
 
   // @** // 
-  //TODO:get User from import axios from 'axios';
+  //TODO:get User from import axios from 'axios' connect to backend with basic auth;
   // find user by username in {SpringBoot}
   const getUser = async() => { 
     // Endcode Your Data {username,password}
@@ -110,7 +110,6 @@ export const Dashboard = () => {
             <CreditCard className="h-12 w-12 text-indigo-600" />
           </div>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Deposit Section */}
           <div className="bg-white rounded-lg shadow-lg p-6">
