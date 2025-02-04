@@ -30,7 +30,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (username: string, password: string) => {
     //Encode The Data !!!
     const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
-    try{
       const respone =  await axios.post("http://localhost:8080/auth/login",{
         username,
         password
@@ -57,12 +56,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           isAuthenticated: true,
         });
       }
-    }catch(error){
-      alert(error);
-    }
-
-    
-
   };
 
   const register = async (username: string, password: string, firstName: string, lastName: string) => {
@@ -73,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       balance: 0,
       password:""
     };
-    
+    // not need for this App 
     localStorage.setItem('user', JSON.stringify(mockUser));
     setAuthState({
       user: mockUser,
