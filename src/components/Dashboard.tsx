@@ -13,12 +13,12 @@ export const Dashboard = () => {
   const [transactions,seTransactions] = useState<Transaction[]>([]);
 
   // @** // 
-  //TODO:get User from import axios from 'axios' connect to backend with basic auth;
+  //TODO:get User from import axios from 'axios';
   // find user by username in {SpringBoot}
   const getUser = async() => { 
     // Endcode Your Data {username,password}
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
-    // get user from url in Api
+    // get user from url {Api}
     const getUser = await axios.get("http://localhost:8080/auth/user",{
       headers: {
         'Authorization': authHeader
@@ -30,10 +30,14 @@ export const Dashboard = () => {
       setBalance(getUser.data.amount)
    }
   // @**
-  
-  
-  const fetchTransactions = async() => {
+
+
+  //@**//
+  //TODO:get Transaction from import axios from 'axios';
+  const getTransactions = async() => {
+    // Endcode Your Data {username,password}
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`;
+    // get Transaction from url {API}
     const response = await axios.get(`http://localhost:8080/bank/transactions/${user?.id}`,{
         headers: {
           'Authorization': authHeader
@@ -42,8 +46,12 @@ export const Dashboard = () => {
     );
     seTransactions(response.data);
   }
-
+  // @**
+  
+  // @ ** //
+  //TODO:button for Deposit Withdraw Transfer  from API
   const handleDeposit = async() => {
+    // Endcode Your Data {username,password}
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
       const respone = fetch(`http://localhost:8080/bank/deposit/${user?.accountNumber}`, {
         method: "POST",
@@ -53,14 +61,18 @@ export const Dashboard = () => {
         },
         body: JSON.stringify({ amount:amount })
       });
+
+    // to update Transaction and Balance
     if((await respone).status === 200){
-      fetchTransactions();
+      getTransactions();
       getUser();
     }
   };
+  // @ **//
 
-
+  // @ ** //
   const handleWithdraw = async() => {
+    // Endcode Your Data {username,password}
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
     const respone =  fetch(`http://localhost:8080/bank/withdrawal/${user?.accountNumber}`, {
       method: "POST",
@@ -70,13 +82,17 @@ export const Dashboard = () => {
       },
       body: JSON.stringify({ amount:amount})
       });
+    // to update Transaction and Balance
     if((await respone).status === 200){
-      fetchTransactions();
+      getTransactions();
       getUser();
     }
   };
+  // @ ** //
 
+  // @ ** //
   const handleTransfer = async() => {
+    // Endcode Your Data {username,password}
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
     const respone =  fetch(`http://localhost:8080/bank/transfer/${user?.accountNumber}`, {
       method: "POST",
@@ -89,11 +105,11 @@ export const Dashboard = () => {
         amount:amount 
       })
     });
+    // to update Transaction and Balance
     if((await respone).status === 200){
-      fetchTransactions();
+      getTransactions();
       getUser();
     }
-    console.log('Transfer:', amount, 'to', accountNumberTransfer);
   };
 
   return (
@@ -110,6 +126,7 @@ export const Dashboard = () => {
             <CreditCard className="h-12 w-12 text-indigo-600" />
           </div>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Deposit Section */}
           <div className="bg-white rounded-lg shadow-lg p-6">
@@ -183,7 +200,7 @@ export const Dashboard = () => {
         </div>
 
         {/* Transactions Table */}
-        <div className="bg-white rounded-lg shadow-lg p-6" onClick={fetchTransactions}>
+        <div className="bg-white rounded-lg shadow-lg p-6" onClick={getTransactions}>
           <h3 className="text-xl font-semibold mb-4">Recent Transactions</h3>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
