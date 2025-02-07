@@ -53,20 +53,25 @@ export const Dashboard = () => {
   const handleDeposit = async() => {
     // Endcode Your Data {username,password}
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
+    if(amount > "0"){
       const respone = fetch(`http://localhost:8080/bank/deposit/${user?.accountNumber}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Authorization": authHeader
         },
-        body: JSON.stringify({ amount:amount })
+        body: JSON.stringify({ amount :amount })
       });
-
     // to update Transaction and Balance
-    if((await respone).status === 200){
-      getTransactions();
-      getUser();
+      if((await respone).status === 200){
+        getTransactions();
+        getUser();
+      }
+    }else{
+      alert("Money can not be zero or negative !!");
     }
+
+
   };
   // @ **//
 
@@ -74,6 +79,7 @@ export const Dashboard = () => {
   const handleWithdraw = async() => {
     // Endcode Your Data {username,password}
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
+    if(Number(amount) >= Number(blanace) && amount > "0" && Number(blanace) > 0){
     const respone =  fetch(`http://localhost:8080/bank/withdrawal/${user?.accountNumber}`, {
       method: "POST",
       headers: {
@@ -87,6 +93,9 @@ export const Dashboard = () => {
       getTransactions();
       getUser();
     }
+  }else{
+    alert("You don't have enough Money or Valid Money !!")
+  }
   };
   // @ ** //
 
@@ -94,6 +103,7 @@ export const Dashboard = () => {
   const handleTransfer = async() => {
     // Endcode Your Data {username,password}
     const authHeader = `Basic ${btoa(`${user?.username}:${user?.password}`)}`; 
+    if(amount >= String(blanace) && amount > "0"  && Number(blanace) > 0){
     const respone =  fetch(`http://localhost:8080/bank/transfer/${user?.accountNumber}`, {
       method: "POST",
       headers: {
@@ -105,11 +115,15 @@ export const Dashboard = () => {
         amount:amount 
       })
     });
-    // to update Transaction and Balance
-    if((await respone).status === 200){
-      getTransactions();
-      getUser();
-    }
+        // to update Transaction and Balance
+        if((await respone).status === 200){
+          getTransactions();
+          getUser();
+        }
+  }else{
+    alert("You don't have enough Money or Valid Money !!")
+  }
+
   };
 
   return (

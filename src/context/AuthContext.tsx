@@ -28,34 +28,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (username: string, password: string) => {
-    //Encode The Data !!!
-    const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
-      const respone =  await axios.post("http://localhost:8080/auth/login",{
-        username,
-        password
-      });
-      if(respone.status === 200){
-        const getUser =  await axios.get("http://localhost:8080/auth/user",{
-          headers: {
-            'Authorization': authHeader
-          },
-            params:{
-              userName:username
-            }
-          });
-        const mockUser: User = {
-          id: getUser.data.id,
-          username: getUser.data.username,
-          accountNumber:getUser.data.accountNumber,
-          balance: getUser.data.amount,
-          password:password
-        };
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        setAuthState({
-          user: mockUser,
-          isAuthenticated: true,
+            //Encode The Data !!!
+        const authHeader = `Basic ${btoa(`${username}:${password}`)}`;
+        const respone =  await axios.post("http://localhost:8080/auth/login",{
+          username,
+          password
         });
-      }
+        if(respone.status === 200){
+          const getUser =  await axios.get("http://localhost:8080/auth/user",{
+            headers: {
+              'Authorization': authHeader
+            },
+              params:{
+                userName:username
+              }
+            });
+          const mockUser: User = {
+            id: getUser.data.id,
+            username: getUser.data.username,
+            accountNumber:getUser.data.accountNumber,
+            balance: getUser.data.amount,
+            password:password
+          };
+          localStorage.setItem('user', JSON.stringify(mockUser));
+          setAuthState({
+            user: mockUser,
+            isAuthenticated: true,
+          });
+        }
+
   };
 
   const register = async (username: string, password: string, firstName: string, lastName: string) => {
