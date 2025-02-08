@@ -1,0 +1,10 @@
+.loginText{
+    margin-top: 3%;
+    margin-left: 40%;
+    font-size:14px;
+}
+
+.loginText:hover{
+    color: purple;
+    cursor: pointer;
+}

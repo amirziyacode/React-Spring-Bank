@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import "./css/registertext.css"
 
 export const RegisterForm = () => {
   const [confirmPassword, setContfirm] = useState('');
@@ -23,6 +24,9 @@ export const RegisterForm = () => {
       console.log(error);
     }
 
+  }
+  const navigateLoginPage = () => {
+    navigate('/login')
   }
 
   return (
@@ -74,6 +78,7 @@ export const RegisterForm = () => {
             >
               Register
             </button>
+            <p onClick={navigateLoginPage} className="loginText">Login Page</p>
           </div>
       </div>
     </div>
