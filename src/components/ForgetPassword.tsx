@@ -1,38 +1,18 @@
-import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import "./css/logni.css";
+import "./css/registertext.css"
 
-export const LoginForm = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useAuth();
+export const ForgetPassword = () => {
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await login(username, password);
-      navigate('/dashboard');
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
-  };
-
-  const singup = () => {
-    try {
-      navigate('/register');
-    }catch(error){
-      console.error("Regesiter Failed");
-    }
+  const registerApi = async() => {
+    ///
   }
-
-  const forgetPassword = () => {
-    try{
-      navigate('/forgetPassword');
-    }catch(error){
-      console.log("Unable to forget password");
-    }
+  const navigateLoginPage = () => {
+    navigate('/login')
   }
 
   return (
@@ -40,19 +20,28 @@ export const LoginForm = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            Get new Password
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <input
                 type="text"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="UserName"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Password"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="NewPassword"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
               />
             </div>
             <div>
@@ -60,9 +49,9 @@ export const LoginForm = () => {
                 type="password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
           </div>
@@ -70,14 +59,13 @@ export const LoginForm = () => {
           <div>
             <button
               type="submit"
+              onClick={registerApi}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Sign in
+              Ok
             </button>
-            <p className="signup" onClick={singup}>if you want to make a new account click here</p>
-            <p className="forget" onClick={forgetPassword}>forgetPassowr?</p>
+            <p onClick={navigateLoginPage} className="loginText">Login Page</p>
           </div>
-        </form>
       </div>
     </div>
   );

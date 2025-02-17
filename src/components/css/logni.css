@@ -8,3 +8,13 @@
     color: purple;
     cursor: pointer;
 }
+
+.forget{
+    color: red;
+    margin-top:3%;
+    margin-left: 38%;
+}
+.forget:hover{
+    opacity: 50%;
+    cursor: pointer;
+}
