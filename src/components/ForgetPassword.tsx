@@ -1,15 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import "./css/registertext.css"
-
 export const ForgetPassword = () => {
+  const [username,setusername] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
+  // TODO : "http://localhost:8080/auth/forgetPassword/{username}"
   const registerApi = async() => {
-    ///
+    const response = await axios.post(`http://localhost:8080/auth/forgetPassword/${username}`,{
+      oldPassword,
+      newPassword,
+      confirmPassword
+    });
+    if(response.status === 200){
+      alert(response.data.message); 
+      navigate('/login')
+    }
+    else{
+      alert(response.data.message);  
+    }
   }
   const navigateLoginPage = () => {
     navigate('/login')
@@ -24,9 +37,19 @@ export const ForgetPassword = () => {
           </h2>
         </div>
           <div className="rounded-md shadow-sm -space-y-px">
-            <div>
+          <div>
               <input
                 type="text"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="username"
+                value={username}
+                onChange={(e) => setusername(e.target.value)}
+              />
+            </div>
+            <div>
+              <input
+                type="password"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
